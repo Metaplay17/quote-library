@@ -17,6 +17,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class User {
+
+    public User(String username, String passwordHash) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,6 +32,9 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(nullable = false, insertable = false)
+    private Byte privilegeLevel;
+
     @OneToMany(mappedBy = "user")
-    private List<Quote> quotes;
+    private List<UserQuote> quotes;
 }

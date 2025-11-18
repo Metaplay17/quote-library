@@ -28,11 +28,14 @@ public class Quote {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    private Integer authorId;
+    private Author author;
 
     @Column(nullable = true)
     private String context;
 
     @OneToMany(mappedBy = "quote")
     private List<QuoteTag> tags;
+
+    @OneToMany(mappedBy = "quote")
+    private List<UserQuote> users;
 }

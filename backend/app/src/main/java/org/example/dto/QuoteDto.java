@@ -1,4 +1,4 @@
-package org.example.dto.responses.quotes;
+package org.example.dto;
 
 import java.util.List;
 

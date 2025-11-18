@@ -21,9 +21,9 @@ public class QuoteTag {
 
     @ManyToOne
     @JoinColumn(name = "quote_id")
-    private Integer quoteId;
+    private Quote quote;
 
     @ManyToOne
     @JoinColumn(name = "tag_id")
-    private Integer tagId;
+    private Tag tag;
 }

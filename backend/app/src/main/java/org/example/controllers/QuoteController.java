@@ -1,8 +1,12 @@
 package org.example.controllers;
 
+import java.util.List;
+
+import org.example.dto.QuoteDto;
 import org.example.dto.requests.quotes.FindByAuthorsAndTagsRequest;
-import org.example.dto.responses.quotes.AuthorQuotesResponse;
+import org.example.dto.responses.quotes.QuotesListResponse;
 import org.example.services.QuoteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,15 +27,15 @@ public class QuoteController {
     }
 
     @PostMapping("/find")
-    public String postMethodName(@RequestBody FindByAuthorsAndTagsRequest request) {
-        //TODO
-        return null;
+    public ResponseEntity<QuotesListResponse> findQuotes(@RequestBody FindByAuthorsAndTagsRequest request) {
+        List<QuoteDto> quotes = quoteService.findByAuthorAndTag(request.getTagsId(), request.getAuthorsId(), request.getStartIndex());
+        return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
     }
 
     @GetMapping("/random")
-    public ResponseEntity<AuthorQuotesResponse> getRandomNotAddedQuotes(Authentication authentication) {
+    public ResponseEntity<QuotesListResponse> getRandomNotAddedQuotes(Authentication authentication) {
         Integer userId = (Integer)authentication.getPrincipal();
-        // TODO
-        return null;
+        List<QuoteDto> quotes = quoteService.getRandomNotAddedQuotes(userId);
+        return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
     }
 }
