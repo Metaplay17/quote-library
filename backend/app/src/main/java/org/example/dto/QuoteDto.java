@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QuoteDto {
     private Integer id;
-    private Integer authorId;
+    private String author;
     private List<TagDto> tags;
     private String text;
     private String context;

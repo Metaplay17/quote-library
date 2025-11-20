@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom";
+import type { DefaultResponse } from "./types";
+import { useNotificationDialog } from "./Modals/NotificationContext";
+
 // 1. Проверяет, что строка начинается с латинской буквы, имеет длину от 3 символов и не содержит специальных символов, кроме нижнего подчеркивания
 export function isValidUsername(str: string): boolean {
   const regex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
@@ -11,4 +15,37 @@ export function isValidPassword(str: string): boolean {
   const hasUpperCase = /[A-Z]/.test(str);
 
   return hasMinLength && hasDigit && hasUpperCase;
+}
+
+export async function makeSafeGet(url : string, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response> {
+  const API_URL : string = import.meta.env.VITE_API_URL;
+
+  try {
+    const response : Response = await fetch(`${API_URL}${url}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    });
+
+    if (!response.ok) {
+        const json : DefaultResponse = await response.json();
+        if (json.status == "UNAUTHORIZED") {
+            navigate('/login');
+            throw new Error();
+        }
+        showAlert({
+            title: json.status,
+            message: json.message
+        });
+        throw new Error();
+    }
+    return response;
+  } catch (ex : any) {
+      showAlert({
+          title: "Ошибка сети",
+          message: "Проверьте подключение к интернету"
+      });
+      throw new Error();
+  }
 }

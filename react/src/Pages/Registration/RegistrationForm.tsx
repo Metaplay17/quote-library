@@ -6,6 +6,8 @@ import type { DefaultResponse } from '../../types';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
+    const API_URL : string = import.meta.env.VITE_API_URL;
+
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -29,8 +31,11 @@ const RegistrationForm = () => {
             return;
         }
 
-        const response : Response = await fetch("/api/auth/register", {
+        const response : Response = await fetch(`${API_URL}/auth/register`, {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 username: username,
                 password: password

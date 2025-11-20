@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -36,6 +38,12 @@ public class QuoteController {
     public ResponseEntity<QuotesListResponse> getRandomNotAddedQuotes(Authentication authentication) {
         Integer userId = (Integer)authentication.getPrincipal();
         List<QuoteDto> quotes = quoteService.getRandomNotAddedQuotes(userId);
+        return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<QuotesListResponse> searchQuotes(@RequestParam String pattern, @RequestParam Integer startIndex) {
+        List<QuoteDto> quotes = quoteService.searchQuotes(pattern, startIndex);
         return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
     }
 }

@@ -1,125 +1,162 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/QuotesBlock.css';
+import { type Tag, type Quote, type QuotesListResponse, type TagsListResponse } from '../../types';
+import { makeSafeGet } from '../../util';
+import { useNavigate } from 'react-router-dom';
+import { useNotificationDialog } from '../../Modals/NotificationContext';
 
-// Тип для цитаты
-interface Quote {
-  id: number;
-  text: string;
-  author: string;
-  tags: string[];
-  context: string
-}
 
 const QuotesBlock: React.FC = () => {
-  // Пример данных
-  const initialQuotes: Quote[] = [
-    { id: 1, text: 'Цитата 1', author: 'Автор 1', tags: ['вдохновение', 'жизнь'], context: "XD" },
-    { id: 2, text: 'Цитата 2', author: 'Автор 2', tags: ['мудрость', 'время'], context: "XD" },
-    { id: 3, text: 'Цитата 3', author: 'Автор 3', tags: ['настроение'], context: "XD" },
-    { id: 4, text: 'Цитата 4', author: 'Автор 4', tags: ['настроение', 'вдохновение'], context: "XD" },
-    { id: 5, text: 'Цитата 5', author: 'Автор 5', tags: ['мудрость', 'жизнь'], context: "XD" },
-  ];
+    const navigate = useNavigate();
+    const { showAlert, showConfirm } = useNotificationDialog();
 
-  const [quotes, setQuotes] = useState<Quote[]>(initialQuotes);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isNextQuotes, setIsNextQuotes] = useState<boolean>(true);
-  const [isPrevQuotes, setIsPrevQuotes] = useState<boolean>(false);
+    const [quotes, setQuotes] = useState<Quote[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [allTags, setAllTags] = useState<Tag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [isNextQuotes, setIsNextQuotes] = useState<boolean>(true);
+    const [isPrevQuotes, setIsPrevQuotes] = useState<boolean>(false);
+    const [startIndex, setStartIndex] = useState<number>(0);
 
-  const allTags = Array.from(new Set(initialQuotes.flatMap(q => q.tags))); // С сервера
-
-  const handleTagChange = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
+    const fetchRandomQuotes = async () => {
+        try {
+            const response : Response = await makeSafeGet("/quotes/random", navigate, showAlert);
+            const json : QuotesListResponse = await response.json();
+            setQuotes(json.quotes);
+        } catch (ex : any) {}
     }
-  };
 
-  const handleRandomQuotes = () => {
-    alert('Загружены случайные цитаты!');
-  };
+    useEffect(() => {
+        const fetchTags = async () => {
+            const response : Response = await makeSafeGet("/tags", navigate, showAlert);
+            const json : TagsListResponse = await response.json();
+            setAllTags(json.tags);
+        }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert(`Поиск по: ${searchTerm}, теги: ${selectedTags.join(', ')}`);
-  };
+        fetchTags();
+        fetchRandomQuotes();
+    }, []);
 
-  return (
-    <div className="quote-block">
-      {/* Поиск */}
-      <div className="search-section">
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            placeholder="Поиск цитат..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          <button type="submit" className="search-button">Найти</button>
-          <button type="button" onClick={handleRandomQuotes} className="random-button">Случайные цитаты</button>
-        </form>
-      </div>
+    const handleTagChange = (tag: Tag) => {
+        if (selectedTags.includes(tag)) {
+            setSelectedTags(selectedTags.filter(t => t !== tag));
+        } else {
+            setSelectedTags([...selectedTags, tag]);
+        }
+    };
 
-      <div className="content-layout">
-        {/* Блок с тегами */}
-        <aside className="tags-sidebar">
-          <h3>Фильтры по тегам</h3>
-          <div className="tags-list">
-            {allTags.map(tag => (
-              <label key={tag} className="tag-checkbox">
-                <input
-                  type="checkbox"
-                  checked={selectedTags.includes(tag)}
-                  onChange={() => handleTagChange(tag)}
-                />
-                {tag}
-              </label>
-            ))}
+    const handleRandomQuotes = async () => {
+        await fetchRandomQuotes();
+    };
+
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const response = await makeSafeGet(`/quotes/search?pattern=${searchTerm}&startIndex=${startIndex}`, navigate, showAlert);
+        const json : QuotesListResponse = await response.json();
+        if (json.quotes.length < 5) {
+            setIsNextQuotes(false);
+        }
+        else {
+          setIsNextQuotes(true);
+        }
+        setQuotes(json.quotes);
+    };
+
+    const handleNextButton = async (e : React.FormEvent) => {
+        if (!isNextQuotes) {
+            return;
+        }
+        setStartIndex(prev => prev + 5);
+        await handleSearch(e);
+    }
+
+    const handlePrevButton = async (e : React.FormEvent) => {
+        if (!isPrevQuotes) {
+            return;
+        }
+        setStartIndex(prev => prev - 5);
+        if (startIndex <= 0) {
+            setIsPrevQuotes(false);
+        }
+        await handleSearch(e);
+    }
+
+    return (
+        <div className="quote-block">
+          {/* Поиск */}
+          <div className="search-section">
+            <form onSubmit={handleSearch} className="search-form">
+              <input
+                type="text"
+                placeholder="Поиск цитат..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">Найти</button>
+              <button type="button" onClick={handleRandomQuotes} className="random-button">Случайные цитаты</button>
+            </form>
           </div>
-        <button className="search-button">Обновить</button>
-        </aside>
 
-        {/* Блок с цитатами */}
-        <section className="quotes-container">
-          <div className="quotes-grid">
-            {quotes.map(quote => (
-              <div key={quote.id} className="quote-card">
-                <p className="quote-text">"{quote.text}"</p>
-                <p className="quote-author">— {quote.author}</p>
-                <p className="quote-context">Контекст: {quote.context}</p>
-                <div className="quote-tags">
-                  {quote.tags.map(tag => (
-                    <span key={tag} className="tag-badge">{tag}</span>
-                  ))}
-                </div>
-                <button className="favorite-button">❤️ Добавить в избранное</button>
+          <div className="content-layout">
+            {/* Блок с тегами */}
+            <aside className="tags-sidebar">
+              <h3>Фильтры по тегам</h3>
+              <div className="tags-list">
+                {allTags.map(tag => (
+                  <label key={tag.id} className="tag-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={selectedTags.includes(tag)}
+                      onChange={() => handleTagChange(tag)}
+                    />
+                    {tag.name}
+                  </label>
+                ))}
               </div>
-            ))}
-          </div>
+            <button className="search-button">Обновить</button>
+            </aside>
 
-          {/* Пагинация */}
-          <div className="pagination">
-            <button
-                onClick={() => null}
-                disabled={!isPrevQuotes}
-                className="pagination-button"
-            >
-                {'<'}
-            </button>
-            <button
-                    onClick={() => null}
-                    disabled={!isNextQuotes}
+            {/* Блок с цитатами */}
+            <section className="quotes-container">
+              <div className="quotes-grid">
+                {quotes.map(quote => (
+                  <div key={quote.id} className="quote-card">
+                    <p className="quote-text">"{quote.text}"</p>
+                    <p className="quote-author">— {quote.author}</p>
+                    <p className="quote-context">Контекст: {quote.context === null ? "Отсутствует" : quote.context}</p>
+                    <div className="quote-tags">
+                      {quote.tags.map(tag => (
+                        <span key={tag.id} className="tag-badge">{tag.name}</span>
+                      ))}
+                    </div>
+                    <button className="favorite-button">❤️ Добавить в избранное</button>
+                  </div>
+                ))}
+                {quotes.length == 0 ? <h3>Цитат нет</h3> : ""}
+              </div>
+
+              {/* Пагинация */}
+              <div className="pagination">
+                <button
+                    onClick={(e) => handleNextButton(e)}
+                    disabled={!isPrevQuotes}
                     className="pagination-button"
-            >
-                {'>'}
-            </button>
+                >
+                    {'<'}
+                </button>
+                <button
+                        onClick={(e) => handlePrevButton(e)}
+                        disabled={!isNextQuotes}
+                        className="pagination-button"
+                >
+                    {'>'}
+                </button>
+              </div>
+            </section>
           </div>
-        </section>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default QuotesBlock;

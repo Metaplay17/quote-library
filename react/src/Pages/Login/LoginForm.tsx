@@ -4,8 +4,11 @@ import { isValidPassword, isValidUsername } from '../../util';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
 import type { DefaultResponse } from '../../types';
+import type LoginResponse from '../../types';
 
 const LoginForm: React.FC = () => {
+    const API_URL : string = import.meta.env.VITE_API_URL;
+
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -30,8 +33,11 @@ const LoginForm: React.FC = () => {
             return;
         }
 
-        const response : Response = await fetch("/api/auth/register", {
+        const response : Response = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 username: username,
                 password: password
@@ -46,7 +52,11 @@ const LoginForm: React.FC = () => {
             });
             return;
         }
-        navigate('/login');
+        const json : LoginResponse = await response.json();
+        localStorage.setItem("token", json.token);
+        localStorage.setItem("username", json.username);
+        localStorage.setItem("privilegeLevel", json.privilegeLevel.toString());
+        navigate('/home');
   };
 
   return (
