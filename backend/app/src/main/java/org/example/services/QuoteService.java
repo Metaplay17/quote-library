@@ -41,9 +41,9 @@ public class QuoteService {
             List<QuoteTag> tags = q.getTags();
             List<TagDto> tagDtos = new ArrayList<TagDto>();
             tags.forEach((QuoteTag t) -> {
-                Optional<Tag> tag = tagRepository.findById(t.getId());
+                Optional<Tag> tag = tagRepository.findById(t.getTag().getId());
                 if (!tag.isPresent()) {
-                    throw new TagNotFoundException("Тег с id = " + t.getId() + " не найден");
+                    throw new TagNotFoundException("Тег с id = " + t.getTag().getId() + " не найден");
                 }
                 tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
             });
@@ -96,9 +96,9 @@ public class QuoteService {
             List<QuoteTag> tags = q.getTags();
             List<TagDto> tagDtos = new ArrayList<TagDto>();
             tags.forEach((QuoteTag t) -> {
-                Optional<Tag> tag = tagRepository.findById(t.getId());
+                Optional<Tag> tag = tagRepository.findById(t.getTag().getId());
                 if (!tag.isPresent()) {
-                    throw new TagNotFoundException("Тег с id = " + t.getId() + " не найден");
+                    throw new TagNotFoundException("Тег с id = " + t.getTag().getId() + " не найден");
                 }
                 tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
             });

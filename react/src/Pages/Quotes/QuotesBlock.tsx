@@ -23,6 +23,9 @@ const QuotesBlock: React.FC = () => {
             const response : Response = await makeSafeGet("/quotes/random", navigate, showAlert);
             const json : QuotesListResponse = await response.json();
             setQuotes(json.quotes);
+            if (json.quotes.length < 5) {
+              setIsNextQuotes(false);
+            }
         } catch (ex : any) {}
     }
 
