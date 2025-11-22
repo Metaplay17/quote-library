@@ -21,4 +21,10 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
 
     @Query(value = "SELECT * FROM search_quotes_by_pattern(:pattern, :startIndex, 5)", nativeQuery = true)
     List<Quote> searchQuotes(@Param("pattern") String pattern, @Param("startIndex") Integer startIndex);
+
+    @Query(value = "SELECT * FROM create_quote(:text, :author_id, :context, :tags)", nativeQuery = true)
+    void createQuotes(@Param("text") String text, @Param("author_id") Integer authorId, @Param("context") String context, @Param("tags") String[] tags);
+
+    @Query(value = "SELECT * FROM delete_quote(:quote_id)", nativeQuery = true)
+    void deleteQuote(@Param("quote_id") Integer quote_id);
 }

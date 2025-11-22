@@ -52,6 +52,4 @@ public class UserController {
         quoteService.deleteQuoteFromUser(userId, request.getQuoteId());
         return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK, "OK"));
     }
-    
-    
 }

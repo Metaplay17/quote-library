@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.example.dto.TagDto;
+import org.example.dto.admin.CreateTagRequest;
 import org.example.models.Tag;
 import org.example.repositories.TagRepository;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,13 @@ public class TagService {
             tagDtos.add(new TagDto(t.getId(), t.getName()));
         });
         return tagDtos;
+    }
+
+    public void createTag(CreateTagRequest request) {
+        tagRepository.createTag(request.getName());
+    }
+
+    public void deleteTag(Integer tagId) {
+        tagRepository.deleteTag(tagId);
     }
 }

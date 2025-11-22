@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.example.dto.QuoteDto;
 import org.example.dto.TagDto;
+import org.example.dto.admin.CreateQuoteRequest;
 import org.example.exceptions.IllegalRequestException;
 import org.example.exceptions.TagNotFoundException;
 import org.example.models.Quote;
@@ -105,5 +106,13 @@ public class QuoteService {
             quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext()));
         });
         return quoteDtos;
+    }
+
+    public void createQuote(CreateQuoteRequest request) {
+        quoteRepository.createQuotes(request.getText(), request.getAuthorId(), request.getContext(), request.getTags());
+    }
+
+    public void deleteQuote(Integer quoteId) {
+        quoteRepository.deleteQuote(quoteId);
     }
 }
