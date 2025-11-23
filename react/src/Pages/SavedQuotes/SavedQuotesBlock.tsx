@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
 
 
-const QuotesBlock: React.FC = () => {
+const SavedQuotesBlock: React.FC = () => {
     const navigate = useNavigate();
     const { showAlert, showConfirm } = useNotificationDialog();
 
@@ -29,9 +29,9 @@ const QuotesBlock: React.FC = () => {
         setFilteredAuthors(allAuthors.filter(a => a.name.toLowerCase().includes(searchAuthorTerm.toLowerCase())));
     }, [searchAuthorTerm]);
 
-    const fetchRandomQuotes = async () => {
+    const fetchSavedQuotes = async () => {
         try {
-            const response : Response = await makeSafeGet("/quotes/random", navigate, showAlert);
+            const response : Response = await makeSafeGet(`/user/saved-quotes?startIndex=${startIndex}`, navigate, showAlert);
             const json : QuotesListResponse = await response.json();
             setQuotes(json.quotes);
             if (json.quotes.length < 5) {
@@ -56,7 +56,7 @@ const QuotesBlock: React.FC = () => {
 
         fetchTags();
         fetchAuthors();
-        fetchRandomQuotes();
+        fetchSavedQuotes();
     }, []);
 
     const handleTagChange = (tag: Tag) => {
@@ -67,16 +67,13 @@ const QuotesBlock: React.FC = () => {
         }
     };
 
-    const handleRandomQuotes = async () => {
-        await fetchRandomQuotes();
-    };
-
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
-        const response = await makeSafePost("/quotes/find", {
+        const response = await makeSafePost("/user/saved-quotes/find", {
             pattern: searchTerm,
             tagsId: selectedTags.map(t => t.id),
-            authorsId: selectedAuthors.map(a => a.id)
+            authorsId: selectedAuthors.map(a => a.id),
+            startIndex: startIndex
         }, navigate, showAlert);
         const json : QuotesListResponse = await response.json();
         if (json.quotes.length < 5) {
@@ -126,8 +123,8 @@ const QuotesBlock: React.FC = () => {
       setSearchAuthorTerm('');
     }
 
-    const handleSaveQuote = (quoteId : number) => {
-      makeSafePost("/user/add", {
+    const handleDeleteQuote = (quoteId : number) => {
+      makeSafePost("/user/delete", {
         quoteId: quoteId
       }, navigate, showAlert);
       window.location.reload();
@@ -146,7 +143,6 @@ const QuotesBlock: React.FC = () => {
                 className="search-input"
               />
               <button type="submit" className="search-button">Найти</button>
-              <button type="button" onClick={handleRandomQuotes} className="random-button">Случайные цитаты</button>
             </form>
           </div>
 
@@ -181,7 +177,7 @@ const QuotesBlock: React.FC = () => {
                         <span key={tag.id} className="tag-badge">{tag.name}</span>
                       ))}
                     </div>
-                    <button className="favorite-button" onClick={() => handleSaveQuote(quote.id)}>❤️ Добавить в избранное</button>
+                    <button className="favorite-button" onClick={() => handleDeleteQuote(quote.id)}>💔 Удалить из избранного</button>
                   </div>
                 ))}
                 {quotes.length == 0 ? <h3>Цитат нет</h3> : ""}
@@ -243,4 +239,4 @@ const QuotesBlock: React.FC = () => {
     );
 };
 
-export default QuotesBlock;
+export default SavedQuotesBlock;

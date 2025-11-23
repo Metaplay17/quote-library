@@ -32,13 +32,44 @@ export async function makeSafeGet(url : string, navigate : (path: string) => voi
         const json : DefaultResponse = await response.json();
         if (json.status == "UNAUTHORIZED") {
             navigate('/login');
-            throw new Error();
         }
         showAlert({
             title: json.status,
             message: json.message
         });
-        throw new Error();
+    }
+    return response;
+  } catch (ex : any) {
+      showAlert({
+          title: "Ошибка сети",
+          message: "Проверьте подключение к интернету"
+      });
+      throw new Error();
+  }
+}
+
+export async function makeSafePost(url : string, body: object, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response> {
+  const API_URL : string = import.meta.env.VITE_API_URL;
+
+  try {
+    const response : Response = await fetch(`${API_URL}${url}`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+        const json : DefaultResponse = await response.json();
+        if (json.status == "UNAUTHORIZED") {
+            navigate('/login');
+        }
+        showAlert({
+            title: json.status,
+            message: json.message
+        });
     }
     return response;
   } catch (ex : any) {

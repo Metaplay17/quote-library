@@ -1,6 +1,8 @@
 package org.example.security;
 
 import org.example.dto.DefaultResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     // Пути, которые не требуют токена (должны совпадать с теми, что в SecurityConfig)
     private static final String[] PUBLIC_URLS = {
@@ -36,8 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        
-        // Пропускаем публичные пути — не проверяем токен
+        logger.info("PATH: " + request.getServletPath() + " IS PUBLIC: " + isPublicUrl(request.getServletPath()));
         if (isPublicUrl(request.getServletPath())) {
             filterChain.doFilter(request, response);
             return;
@@ -78,14 +80,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isPublicUrl(String path) {
         for (String publicUrl : PUBLIC_URLS) {
-            // Поддержка Ant-паттернов вручную (простой вариант)
             if (publicUrl.endsWith("/**")) {
-                String prefix = publicUrl.substring(0, publicUrl.length() - 3);
-                if (path.startsWith(prefix)) {
+                String prefix = path.substring(0, 5);
+                if (prefix.equals("/auth/")) {
                     return true;
                 }
-            } else if (path.equals(publicUrl)) {
-                return true;
             }
         }
         return false;

@@ -7,6 +7,7 @@
   padding: 1vw;
   margin: 1vw;
   border-radius: 15px;
+  max-width: 450px;
 }
 
 .login-form {

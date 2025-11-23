@@ -1,7 +1,11 @@
+import './css/HomeBlock.css';
 
 const HomeBlock = () => {
     return (
-        <h2>Домашняя страница</h2>
+        <main>
+            <h2>{localStorage.getItem("username")}</h2>
+        </main>
+
     )
 }
 

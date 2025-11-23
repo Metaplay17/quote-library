@@ -16,10 +16,21 @@ export interface Tag {
   name: string
 }
 
+export interface Author {
+  id: number,
+  name: string
+}
+
 export interface TagsListResponse {
   status: string,
   message: string,
   tags: Tag[]
+}
+
+export interface AuthorsListResponse {
+  status: string,
+  message: string,
+  authors: Author[]
 }
 
 export interface QuotesListResponse {

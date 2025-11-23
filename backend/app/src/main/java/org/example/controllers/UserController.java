@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.dto.DefaultResponse;
 import org.example.dto.QuoteDto;
+import org.example.dto.requests.quotes.FindByPatternAndAuthorsAndTagsRequest;
 import org.example.dto.requests.user.AddQuoteRequest;
 import org.example.dto.requests.user.DeleteQuoteRequest;
 import org.example.dto.responses.quotes.QuotesListResponse;
@@ -36,6 +37,13 @@ public class UserController {
     public ResponseEntity<QuotesListResponse> getSavedQuotes(Authentication authentication, @RequestParam Integer startIndex) {
         Integer userId = (Integer)authentication.getPrincipal();
         List<QuoteDto> quotes = userService.getUserSavedQuotes(userId, startIndex);
+        return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
+    }
+
+    @PostMapping("/saved-quotes/find")
+    public ResponseEntity<QuotesListResponse> findSavedQuotes(Authentication authentication, @RequestBody FindByPatternAndAuthorsAndTagsRequest request) {
+        Integer userId = (Integer)authentication.getPrincipal();
+        List<QuoteDto> quotes = quoteService.findByPatternAndAuthorsAndTags(true, userId, request.getPattern(), request.getTagsId(), request.getAuthorsId(), request.getStartIndex());
         return ResponseEntity.ok(new QuotesListResponse(HttpStatus.OK, "OK", quotes));
     }
 

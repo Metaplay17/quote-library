@@ -18,7 +18,7 @@ const MainPage: React.FC<MainPageProps> = ({ children }) => {
                 <li><a onClick={() => navigate('/home')}>Домашняя страница</a></li>
                 <li><a onClick={() => navigate('/quotes')}>Обзор цитат</a></li>
                 <li><a onClick={() => navigate('/saved-quotes')}>Мои цитаты</a></li>
-                <li><a onClick={() => navigate('/settings')}>Настройки</a></li>
+                <li><a onClick={() => {localStorage.removeItem('token'); localStorage.removeItem('username'); localStorage.removeItem('privilegeLevel'); navigate('/login')}}>Выйти</a></li>
             </ul>
             </nav>
         </header>

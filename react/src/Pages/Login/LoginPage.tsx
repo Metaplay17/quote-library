@@ -6,11 +6,11 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     return (
-        <main>
+        <div className="login-page-main">
             <h1>Библиотека Цитат</h1>
             <LoginForm />
             <a onClick={(e) => { e.preventDefault(); navigate('/registration') } }>Нет аккаунта? Зарегистрироваться</a>
-        </main>
+        </div>
     )
 }
 

@@ -1,7 +1,5 @@
 package org.example.dto.requests.quotes;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -11,12 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindByAuthorsAndTagsRequest {
+public class FindByPatternAndAuthorsAndTagsRequest {
     @NotNull
-    private List<Integer> authorsId;
+    private String pattern;
 
     @NotNull
-    private List<Integer> tagsId;
+    private Integer[] authorsId;
+
+    @NotNull
+    private Integer[] tagsId;
 
     @PositiveOrZero
     private Integer startIndex;
