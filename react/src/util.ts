@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
 import type { DefaultResponse } from "./types";
-import { useNotificationDialog } from "./Modals/NotificationContext";
 
 // 1. Проверяет, что строка начинается с латинской буквы, имеет длину от 3 символов и не содержит специальных символов, кроме нижнего подчеркивания
 export function isValidUsername(str: string): boolean {
@@ -17,7 +15,7 @@ export function isValidPassword(str: string): boolean {
   return hasMinLength && hasDigit && hasUpperCase;
 }
 
-export async function makeSafeGet(url : string, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response> {
+export async function makeSafeGet(url : string, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response | null> {
   const API_URL : string = import.meta.env.VITE_API_URL;
 
   try {
@@ -37,6 +35,7 @@ export async function makeSafeGet(url : string, navigate : (path: string) => voi
             title: json.status,
             message: json.message
         });
+        return null;
     }
     return response;
   } catch (ex : any) {
@@ -48,7 +47,7 @@ export async function makeSafeGet(url : string, navigate : (path: string) => voi
   }
 }
 
-export async function makeSafePost(url : string, body: object, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response> {
+export async function makeSafePost(url : string, body: object, navigate : (path: string) => void, showAlert : (params: {title: string, message: string}) => void): Promise<Response | null> {
   const API_URL : string = import.meta.env.VITE_API_URL;
 
   try {
@@ -70,6 +69,7 @@ export async function makeSafePost(url : string, body: object, navigate : (path:
             title: json.status,
             message: json.message
         });
+        return null;
     }
     return response;
   } catch (ex : any) {

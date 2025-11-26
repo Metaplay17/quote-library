@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.dto.DefaultResponse;
+import org.example.exceptions.AccessDeniedException;
 import org.example.exceptions.IllegalRequestArgumentsException;
 import org.example.exceptions.IllegalRequestException;
 import org.example.exceptions.InvalidUsernamePasswordCombinationException;
@@ -85,15 +86,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<DefaultResponse> handleException(HttpRequestMethodNotSupportedException ex) {
+    public ResponseEntity<DefaultResponse> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
         DefaultResponse response = new DefaultResponse(HttpStatus.METHOD_NOT_ALLOWED, "Недопустимый тип запроса");
         log.warn(ex.getMessage());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<DefaultResponse> handleException(NoResourceFoundException ex) {
+    public ResponseEntity<DefaultResponse> handleNotFoundException(NoResourceFoundException ex) {
         DefaultResponse response = new DefaultResponse(HttpStatus.NOT_FOUND, "Запрашиваемый ресурс не найден");
+        log.warn(ex.getMessage());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<DefaultResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        DefaultResponse response = new DefaultResponse(HttpStatus.NOT_FOUND, ex.getMessage());
         log.warn(ex.getMessage());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
@@ -102,8 +110,8 @@ public class GlobalExceptionHandler {
 
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<DefaultResponse> handleException(Exception ex) {
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<DefaultResponse> handleException(Throwable ex) {
         DefaultResponse response = new DefaultResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервера");
         log.error(ex.getMessage());
         return ResponseEntity.status(response.getStatus()).body(response);

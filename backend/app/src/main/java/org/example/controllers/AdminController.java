@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.validation.Valid;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -30,7 +32,7 @@ public class AdminController {
     }
 
     @PostMapping("/quotes")
-    public ResponseEntity<DefaultResponse> createQuote(@RequestBody CreateQuoteRequest request) {
+    public ResponseEntity<DefaultResponse> createQuote(@RequestBody @Valid CreateQuoteRequest request) {
         quoteService.createQuote(request);
         return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK, "OK"));
     }
@@ -42,7 +44,7 @@ public class AdminController {
     }
 
     @PostMapping("/tags")
-    public ResponseEntity<DefaultResponse> createTag(@RequestBody CreateTagRequest request) {
+    public ResponseEntity<DefaultResponse> createTag(@RequestBody @Valid CreateTagRequest request) {
         tagService.createTag(request);
         return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK, "OK"));
     }

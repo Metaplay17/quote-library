@@ -20,5 +20,6 @@ public class FindByPatternAndAuthorsAndTagsRequest {
     private Integer[] tagsId;
 
     @PositiveOrZero
+    @NotNull
     private Integer startIndex;
 }

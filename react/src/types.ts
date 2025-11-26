@@ -11,6 +11,17 @@ export interface DefaultResponse {
   message: string
 }
 
+export interface Profile {
+  username: string,
+  privilegeLevel: number;
+}
+
+export interface ProfileResponse {
+  status: string,
+  message: string,
+  profile: Profile
+}
+
 export interface Tag {
   id: number,
   name: string

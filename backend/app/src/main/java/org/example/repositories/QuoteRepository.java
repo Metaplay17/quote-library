@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuoteRepository extends JpaRepository<Quote, Integer> {
-    @Query(value = "SELECT * FROM get_quotes_by_pattern_and_authors_id_and_tags_id(:is_saved, :userId, :pattern, CAST(:tagsId AS integer[]), CAST(:authorsId AS integer[]), :startIndex, 5)", nativeQuery = true)
+    @Query(value = "SELECT * FROM get_quotes_by_pattern_and_authors_id_and_tags_id(:is_saved, :userId, :pattern, CAST(:tagsId AS integer[]), CAST(:authorsId AS integer[]), :startIndex, 4)", nativeQuery = true)
     List<Quote> findQuotesByPatternAndAuthorsAndTags(@Param("is_saved") Boolean isSaved,
                                                     @Param("userId") Integer userId,
                                                     @Param("pattern") String pattern,
@@ -19,10 +19,10 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
                                                     @Param("startIndex") Integer startIndex
                                                 );
 
-    @Query(value = "SELECT * FROM get_user_added_quotes_by_user_id(:userId, :startIndex, 5)", nativeQuery = true)
+    @Query(value = "SELECT * FROM get_user_added_quotes_by_user_id(:userId, :startIndex, 4)", nativeQuery = true)
     List<Quote> getSavedUserQuotes(@Param("userId") Integer userId, @Param("startIndex") Integer startIndex);
 
-    @Query(value = "SELECT * FROM get_random_user_not_added_quotes_by_user_id(:userId, 5)", nativeQuery = true)
+    @Query(value = "SELECT * FROM get_random_user_not_added_quotes_by_user_id(:userId, 4)", nativeQuery = true)
     List<Quote> getRandomNotSavedUserQuotes(@Param("userId") Integer userId);
 
     @Query(value = "SELECT * FROM create_quote(:text, :author_id, :context, :tags)", nativeQuery = true)

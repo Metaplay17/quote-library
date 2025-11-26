@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.example.dto.ProfileDto;
 import org.example.dto.QuoteDto;
 import org.example.dto.TagDto;
 import org.example.dto.requests.auth.LoginRequest;
@@ -11,6 +12,7 @@ import org.example.dto.requests.auth.RegisterRequest;
 import org.example.exceptions.IllegalRequestArgumentsException;
 import org.example.exceptions.InvalidUsernamePasswordCombinationException;
 import org.example.exceptions.TagNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 import org.example.exceptions.UsernameAlreadyUsedException;
 import org.example.models.Quote;
 import org.example.models.QuoteTag;
@@ -70,7 +72,7 @@ public class UserService {
             List<QuoteTag> tags = q.getTags();
             List<TagDto> tagDtos = new ArrayList<TagDto>();
             tags.forEach((QuoteTag t) -> {
-                Optional<Tag> tag = tagRepository.findById(t.getId());
+                Optional<Tag> tag = tagRepository.findById(t.getTag().getId());
                 if (!tag.isPresent()) {
                     throw new TagNotFoundException("Тег с id = " + t.getId() + " не найден");
                 }
@@ -79,5 +81,23 @@ public class UserService {
             quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext()));
         });
         return quoteDtos;
+    }
+
+    public ProfileDto getProfile(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundException("Пользователь с id = " + userId + " не найден");
+        }
+        User user = userOptional.get();
+        return new ProfileDto(user.getUsername(), user.getPrivilegeLevel());
+    }
+
+    public boolean isAdmin(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundException("Пользователь с id = " + userId + " не найден");
+        }
+        User user = userOptional.get();
+        return user.getPrivilegeLevel() >= 5;
     }
 }

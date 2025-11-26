@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,13 +30,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<DefaultResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<DefaultResponse> register(@RequestBody @Valid RegisterRequest request) {
         userService.registerUser(request);
         return ResponseEntity.ok(new DefaultResponse(HttpStatus.OK, "OK"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         User user = userService.authUser(request);
         String token = jwtService.generateToken(user.getId());
         return ResponseEntity.ok(new LoginResponse(HttpStatus.OK, "OK", token, user.getUsername(), user.getPrivilegeLevel()));

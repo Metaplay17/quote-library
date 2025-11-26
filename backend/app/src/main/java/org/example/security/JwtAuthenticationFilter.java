@@ -25,11 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
     private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    // Пути, которые не требуют токена (должны совпадать с теми, что в SecurityConfig)
-    private static final String[] PUBLIC_URLS = {
-        "/auth/**"
-    };
-
     public JwtAuthenticationFilter(JwtService jwtService, ObjectMapper objectMapper) {
         this.jwtService = jwtService;
         this.objectMapper = objectMapper;
@@ -79,13 +74,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicUrl(String path) {
-        for (String publicUrl : PUBLIC_URLS) {
-            if (publicUrl.endsWith("/**")) {
-                String prefix = path.substring(0, 5);
-                if (prefix.equals("/auth/")) {
-                    return true;
-                }
-            }
+        if (path.length() < 6) {
+            return false;
+        }
+        String prefix = path.substring(0, 6);
+        if (prefix.equals("/auth/")) {
+            return true;
         }
         return false;
     }

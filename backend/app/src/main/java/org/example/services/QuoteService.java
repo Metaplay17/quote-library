@@ -79,9 +79,9 @@ public class QuoteService {
             List<QuoteTag> tags = q.getTags();
             List<TagDto> tagDtos = new ArrayList<TagDto>();
             tags.forEach((QuoteTag t) -> {
-                Optional<Tag> tag = tagRepository.findById(t.getId());
+                Optional<Tag> tag = tagRepository.findById(t.getTag().getId());
                 if (!tag.isPresent()) {
-                    throw new TagNotFoundException("Тег с id = " + t.getId() + " не найден");
+                    throw new TagNotFoundException("Тег с id = " + t.getTag().getId() + " не найден");
                 }
                 tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
             });
@@ -89,24 +89,6 @@ public class QuoteService {
         });
         return quoteDtos;
     }
-
-    // public List<QuoteDto> searchQuotes(String pattern, Integer startIndex) {
-    //     List<Quote> quotes = quoteRepository.searchQuotes(pattern, startIndex);
-    //     List<QuoteDto> quoteDtos = new ArrayList<QuoteDto>();
-    //     quotes.forEach((Quote q) -> {
-    //         List<QuoteTag> tags = q.getTags();
-    //         List<TagDto> tagDtos = new ArrayList<TagDto>();
-    //         tags.forEach((QuoteTag t) -> {
-    //             Optional<Tag> tag = tagRepository.findById(t.getTag().getId());
-    //             if (!tag.isPresent()) {
-    //                 throw new TagNotFoundException("Тег с id = " + t.getTag().getId() + " не найден");
-    //             }
-    //             tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
-    //         });
-    //         quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext()));
-    //     });
-    //     return quoteDtos;
-    // }
 
     public void createQuote(CreateQuoteRequest request) {
         quoteRepository.createQuotes(request.getText(), request.getAuthorId(), request.getContext(), request.getTags());

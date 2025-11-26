@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './css/QuotesBlock.css';
+import '../Quotes/css/QuotesBlock.css';
 import { type Tag, type Quote, type QuotesListResponse, type TagsListResponse, type Author, type AuthorsListResponse } from '../../types';
 import { makeSafeGet, makeSafePost } from '../../util';
 import { useNavigate } from 'react-router-dom';
@@ -31,10 +31,13 @@ const SavedQuotesBlock: React.FC = () => {
 
     const fetchSavedQuotes = async () => {
         try {
-            const response : Response = await makeSafeGet(`/user/saved-quotes?startIndex=${startIndex}`, navigate, showAlert);
+            const response : Response | null = await makeSafeGet(`/user/saved-quotes?startIndex=${startIndex}`, navigate, showAlert);
+            if (response === null) {
+              return;
+            }
             const json : QuotesListResponse = await response.json();
             setQuotes(json.quotes);
-            if (json.quotes.length < 5) {
+            if (json.quotes.length < 4) {
               setIsNextQuotes(false);
             }
         } catch (ex : any) {}
@@ -42,13 +45,19 @@ const SavedQuotesBlock: React.FC = () => {
 
     useEffect(() => {
         const fetchTags = async () => {
-            const response : Response = await makeSafeGet("/tags", navigate, showAlert);
+            const response : Response | null = await makeSafeGet("/tags", navigate, showAlert);
+            if (response === null) {
+              return;
+            }
             const json : TagsListResponse = await response.json();
             setAllTags(json.tags);
         }
 
         const fetchAuthors = async () => {
-            const response : Response = await makeSafeGet("/authors/", navigate, showAlert);
+            const response : Response | null = await makeSafeGet("/authors", navigate, showAlert);
+            if (response === null) {
+              return;
+            }
             const json : AuthorsListResponse = await response.json();
             setAllAuthors(json.authors);
             setFilteredAuthors(json.authors);
@@ -67,20 +76,29 @@ const SavedQuotesBlock: React.FC = () => {
         }
     };
 
-    const handleSearch = async (e: React.FormEvent) => {
+    const handleSearch = async (e: React.FormEvent, startIndex: number) => {
         e.preventDefault();
-        const response = await makeSafePost("/user/saved-quotes/find", {
+        const response : Response | null = await makeSafePost("/user/saved-quotes/find", {
             pattern: searchTerm,
             tagsId: selectedTags.map(t => t.id),
             authorsId: selectedAuthors.map(a => a.id),
             startIndex: startIndex
         }, navigate, showAlert);
+        if (response === null) {
+          return;
+        }
         const json : QuotesListResponse = await response.json();
-        if (json.quotes.length < 5) {
+        if (json.quotes.length < 4) {
             setIsNextQuotes(false);
         }
         else {
           setIsNextQuotes(true);
+        }
+        if (startIndex != 0) {
+          setIsPrevQuotes(true);
+        }
+        else {
+          setIsPrevQuotes(false);
         }
         setQuotes(json.quotes);
     };
@@ -89,19 +107,19 @@ const SavedQuotesBlock: React.FC = () => {
         if (!isNextQuotes) {
             return;
         }
-        setStartIndex(prev => prev + 5);
-        await handleSearch(e);
+        setStartIndex(prev => prev + 4);
+        await handleSearch(e, startIndex + 4);
     }
 
     const handlePrevButton = async (e : React.FormEvent) => {
         if (!isPrevQuotes) {
             return;
         }
-        setStartIndex(prev => prev - 5);
+        setStartIndex(prev => prev - 4);
         if (startIndex <= 0) {
             setIsPrevQuotes(false);
         }
-        await handleSearch(e);
+        await handleSearch(e, startIndex - 4);
     }
 
     const handleAuthorAdd = () => {
@@ -123,10 +141,13 @@ const SavedQuotesBlock: React.FC = () => {
       setSearchAuthorTerm('');
     }
 
-    const handleDeleteQuote = (quoteId : number) => {
-      makeSafePost("/user/delete", {
+    const handleDeleteQuote = async (quoteId : number) => {
+      const response : Response | null = await makeSafePost("/user/delete", {
         quoteId: quoteId
       }, navigate, showAlert);
+      if (response === null) {
+        return;
+      }
       window.location.reload();
     }
 
@@ -134,7 +155,7 @@ const SavedQuotesBlock: React.FC = () => {
         <div className="quote-block">
           {/* Поиск */}
           <div className="search-section">
-            <form onSubmit={handleSearch} className="search-form">
+            <form onSubmit={(e) => handleSearch(e, startIndex)} className="search-form">
               <input
                 type="text"
                 placeholder="Поиск цитат..."
@@ -172,12 +193,14 @@ const SavedQuotesBlock: React.FC = () => {
                     <p className="quote-text">"{quote.text}"</p>
                     <p className="quote-author">— {quote.author}</p>
                     <p className="quote-context">Контекст: {quote.context === null ? "Отсутствует" : quote.context}</p>
-                    <div className="quote-tags">
-                      {quote.tags.map(tag => (
-                        <span key={tag.id} className="tag-badge">{tag.name}</span>
-                      ))}
+                    <div className="quote-description">
+                      <button className="favorite-button" onClick={() => handleDeleteQuote(quote.id)}>💔 Удалить из избранного</button>
+                      <div className="quote-tags">
+                        {quote.tags.map(tag => (
+                          <span key={tag.id} className="tag-badge">{tag.name}</span>
+                        ))}
+                      </div>
                     </div>
-                    <button className="favorite-button" onClick={() => handleDeleteQuote(quote.id)}>💔 Удалить из избранного</button>
                   </div>
                 ))}
                 {quotes.length == 0 ? <h3>Цитат нет</h3> : ""}
@@ -186,14 +209,14 @@ const SavedQuotesBlock: React.FC = () => {
               {/* Пагинация */}
               <div className="pagination">
                 <button
-                    onClick={(e) => handleNextButton(e)}
+                    onClick={(e) => handlePrevButton(e)}
                     disabled={!isPrevQuotes}
                     className="pagination-button"
                 >
                     {'<'}
                 </button>
                 <button
-                        onClick={(e) => handlePrevButton(e)}
+                        onClick={(e) => handleNextButton(e)}
                         disabled={!isNextQuotes}
                         className="pagination-button"
                 >
@@ -215,7 +238,7 @@ const SavedQuotesBlock: React.FC = () => {
                     className="search-author-input"
                     list="authors-datalist"
                   />
-                  <datalist id="authors-datalist" onInput={() => alert("XD")}>
+                  <datalist id="authors-datalist">
                     {filteredAuthors.map(a => (
                       <option>
                         {a.name}
