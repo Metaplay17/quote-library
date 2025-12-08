@@ -48,7 +48,7 @@ public class QuoteService {
                 }
                 tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
             });
-            quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext()));
+            quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext(), quoteRepository.getUsesQuote(q.getId())));
         });
         return quoteDtos;
     }
@@ -85,7 +85,7 @@ public class QuoteService {
                 }
                 tagDtos.add(new TagDto(tag.get().getId(), tag.get().getName()));
             });
-            quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext()));
+            quoteDtos.add(new QuoteDto(q.getId(), q.getAuthor().getName(), tagDtos, q.getText(), q.getContext(), quoteRepository.getUsesQuote(q.getId())));
         });
         return quoteDtos;
     }

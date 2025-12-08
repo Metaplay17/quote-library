@@ -55,5 +55,6 @@ export interface Quote {
   text: string,
   author: string,
   tags: Tag[],
-  context: string
+  context: string,
+  uses: number
 }

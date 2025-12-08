@@ -30,4 +30,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Integer> {
 
     @Query(value = "SELECT * FROM delete_quote(:quote_id)", nativeQuery = true)
     void deleteQuote(@Param("quote_id") Integer quote_id);
+
+    @Query(value = "SELECT COUNT(*) FROM users_quotes WHERE quote_id = :quote_id", nativeQuery = true)
+    Integer getUsesQuote(@Param("quote_id") Integer quote_id);
 }

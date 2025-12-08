@@ -15,4 +15,5 @@ public class QuoteDto {
     private List<TagDto> tags;
     private String text;
     private String context;
+    private Integer uses;
 }

@@ -159,6 +159,21 @@ const QuotesBlock: React.FC = () => {
       window.location.reload();
     }
 
+    const copyInClipboard = async (quote : Quote) => {
+      try  {
+        await navigator.clipboard.writeText(`Автор: ${quote.author}, цитата: "${quote.text}"`);
+        showAlert({
+          title: "Успех",
+          message: "Цитата успешно скопирована!"
+        });
+      } catch (err : any) {
+        showAlert({
+          title: "Ошибка",
+          message: "Не удалось скопировать"
+        });
+      }
+    }
+
     return (
       <div className={styles.quote_block}>
         {/* Поиск */}
@@ -200,9 +215,12 @@ const QuotesBlock: React.FC = () => {
               {quotes.map(quote => (
                 <div key={quote.id} className={styles.quote_card}>
                   <p className={styles.quote_text}>"{quote.text}"</p>
-                  <p className={styles.quote_author}>— {quote.author}</p>
+                  <p className={styles.quote_author}>— {quote.author} | Использований: {quote.uses}</p>
                   <p className={styles.quote_context}>Контекст: {quote.context === null ? "Отсутствует" : quote.context}</p>
                   <div className={styles.quote_description}>
+                    <button className={styles.favorite_button} onClick={() => copyInClipboard(quote)}>
+                      Скопировать
+                    </button>
                     <button className={styles.favorite_button} onClick={() => handleSaveQuote(quote.id)}>❤️ Добавить в избранное</button>
                     <div className={styles.quote_tags}>
                       {quote.tags.map(tag => (
