@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import './css/RegistrationForm.css';
+import styles from './css/RegistrationForm.module.css';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
 import { isValidPassword, isValidUsername } from '../../util';
 import type { DefaultResponse } from '../../types';
@@ -54,10 +54,10 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="registration-container">
-        <form onSubmit={handleSubmit} className="registration-form">
+        <div className={styles.registration_container}>
+        <form onSubmit={handleSubmit} className={styles.registration_form}>
             <h2>Регистрация</h2>
-            <div className="input-group">
+            <div className={styles.input_group}>
             <label htmlFor="username">Имя пользователя</label>
             <input
                 type="text"
@@ -67,7 +67,7 @@ const RegistrationForm = () => {
                 required
             />
             </div>
-            <div className="input-group">
+            <div className={styles.input_group}>
             <label htmlFor="password">Пароль</label>
             <input
                 type="password"
@@ -77,7 +77,7 @@ const RegistrationForm = () => {
                 required
             />
             </div>
-            <button type="submit" className="register-button">
+            <button type="submit" className={styles.register_button}>
             Зарегистрироваться
             </button>
         </form>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../Quotes/css/QuotesBlock.css';
+import styles from '../Quotes/css/QuotesBlock.module.css';
 import { type Tag, type Quote, type QuotesListResponse, type TagsListResponse, type Author, type AuthorsListResponse } from '../../types';
 import { makeSafeGet, makeSafePost } from '../../util';
 import { useNavigate } from 'react-router-dom';
@@ -151,115 +151,128 @@ const SavedQuotesBlock: React.FC = () => {
       window.location.reload();
     }
 
-    return (
-        <div className="quote-block">
-          {/* Поиск */}
-          <div className="search-section">
-            <form onSubmit={(e) => handleSearch(e, startIndex)} className="search-form">
-              <input
-                type="text"
-                placeholder="Поиск цитат..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-              <button type="submit" className="search-button">Найти</button>
-            </form>
+  return (
+    <div className={styles.quote_block}>
+      {/* Поиск */}
+      <div className={styles.search_section}>
+        <form onSubmit={(e) => handleSearch(e, startIndex)} className={styles.search_form}>
+          <input
+            type="text"
+            placeholder="Поиск цитат..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.search_input}
+          />
+          <button type="submit" className={styles.search_button}>Найти</button>
+        </form>
+      </div>
+
+      <div className={styles.content_layout}>
+        {/* Блок с тегами */}
+        <aside className={styles.tags_sidebar}>
+          <h3>Фильтры по тегам</h3>
+          <div className={styles.tags_list}>
+            {allTags.map(tag => (
+              <label key={tag.id} className={styles.tag_checkbox}>
+                <input
+                  type="checkbox"
+                  checked={selectedTags.includes(tag)}
+                  onChange={() => handleTagChange(tag)}
+                />
+                {tag.name}
+              </label>
+            ))}
           </div>
+        </aside>
 
-          <div className="content-layout">
-            {/* Блок с тегами */}
-            <aside className="tags-sidebar">
-              <h3>Фильтры по тегам</h3>
-              <div className="tags-list">
-                {allTags.map(tag => (
-                  <label key={tag.id} className="tag-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={selectedTags.includes(tag)}
-                      onChange={() => handleTagChange(tag)}
-                    />
-                    {tag.name}
-                  </label>
-                ))}
-              </div>
-            </aside>
-
-            {/* Блок с цитатами */}
-            <section className="quotes-container">
-              <div className="quotes-grid">
-                {quotes.map(quote => (
-                  <div key={quote.id} className="quote-card">
-                    <p className="quote-text">"{quote.text}"</p>
-                    <p className="quote-author">— {quote.author}</p>
-                    <p className="quote-context">Контекст: {quote.context === null ? "Отсутствует" : quote.context}</p>
-                    <div className="quote-description">
-                      <button className="favorite-button" onClick={() => handleDeleteQuote(quote.id)}>💔 Удалить из избранного</button>
-                      <div className="quote-tags">
-                        {quote.tags.map(tag => (
-                          <span key={tag.id} className="tag-badge">{tag.name}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {quotes.length == 0 ? <h3>Цитат нет</h3> : ""}
-              </div>
-
-              {/* Пагинация */}
-              <div className="pagination">
-                <button
-                    onClick={(e) => handlePrevButton(e)}
-                    disabled={!isPrevQuotes}
-                    className="pagination-button"
-                >
-                    {'<'}
-                </button>
-                <button
-                        onClick={(e) => handleNextButton(e)}
-                        disabled={!isNextQuotes}
-                        className="pagination-button"
-                >
-                    {'>'}
-                </button>
-              </div>
-            </section>
-
-            {/* Блок с авторами */}
-            <aside className="authors-sidebar">
-              <h3>Фильтры по авторам</h3>
-              <div className="search-authors-block">
-                  <input
-                    id="search-authors-input"
-                    type="text"
-                    placeholder="Поиск автора..."
-                    value={searchAuthorTerm}
-                    onChange={(e) => setSearchAuthorTerm(e.target.value)}
-                    className="search-author-input"
-                    list="authors-datalist"
-                  />
-                  <datalist id="authors-datalist">
-                    {filteredAuthors.map(a => (
-                      <option>
-                        {a.name}
-                      </option>
+        {/* Блок с цитатами */}
+        <section className={styles.quotes_container}>
+          <div className={styles.quotes_grid}>
+            {quotes.map(quote => (
+              <div key={quote.id} className={styles.quote_card}>
+                <p className={styles.quote_text}>"{quote.text}"</p>
+                <p className={styles.quote_author}>— {quote.author}</p>
+                <p className={styles.quote_context}>
+                  Контекст: {quote.context === null ? "Отсутствует" : quote.context}
+                </p>
+                <div className={styles.quote_description}>
+                  <button className={styles.favorite_button} onClick={() => handleDeleteQuote(quote.id)}>
+                    💔 Удалить из избранного
+                  </button>
+                  <div className={styles.quote_tags}>
+                    {quote.tags.map(tag => (
+                      <span key={tag.id} className={styles.tag_badge}>{tag.name}</span>
                     ))}
-                  </datalist>
-                  <button onClick={() => handleAuthorAdd()} className="search-button">Добавить</button>
-              </div>
-              
-              <div className="authors-search">
-                {selectedAuthors.length == 0 ? <p>Тут будут выбранные авторы</p> : selectedAuthors.map(author => (
-                  <div className="author-search-block">
-                      <p>{author.name}</p>
-                      <button onClick={() => setSelectedAuthors(selectedAuthors.filter((a) => a.id != author.id))}>Удалить</button>
                   </div>
-                ))}
+                </div>
               </div>
-            </aside>
+            ))}
+            {quotes.length === 0 ? <h3 className={styles.no_quotes}>Цитат нет</h3> : null}
           </div>
-        </div>
-    );
+
+          {/* Пагинация */}
+          <div className={styles.pagination}>
+            <button
+              onClick={(e) => handlePrevButton(e)}
+              disabled={!isPrevQuotes}
+              className={styles.pagination_button}
+            >
+              {'<'}
+            </button>
+            <button
+              onClick={(e) => handleNextButton(e)}
+              disabled={!isNextQuotes}
+              className={styles.pagination_button}
+            >
+              {'>'}
+            </button>
+          </div>
+        </section>
+
+        {/* Блок с авторами */}
+        <aside className={styles.authors_sidebar}>
+          <h3>Фильтры по авторам</h3>
+          <div className={styles.search_authors_block}>
+            <input
+              id="search-authors-input"
+              type="text"
+              placeholder="Поиск автора..."
+              value={searchAuthorTerm}
+              onChange={(e) => setSearchAuthorTerm(e.target.value)}
+              className={styles.search_author_input}
+              list="authors-datalist"
+            />
+            <datalist id="authors-datalist">
+              {filteredAuthors.map(a => (
+                <option key={a.id}>{a.name}</option>
+              ))}
+            </datalist>
+            <button onClick={() => handleAuthorAdd()} className={styles.search_button}>
+              Добавить
+            </button>
+          </div>
+
+          <div className={styles.authors_search}>
+            {selectedAuthors.length === 0 ? (
+              <p className={styles.no_selected_authors}>Тут будут выбранные авторы</p>
+            ) : (
+              selectedAuthors.map(author => (
+                <div key={author.id} className={styles.author_search_block}>
+                  <p>{author.name}</p>
+                  <button
+                    onClick={() => setSelectedAuthors(selectedAuthors.filter(a => a.id !== author.id))}
+                    className={styles.delete_author_button}
+                  >
+                    Удалить
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
 };
 
 export default SavedQuotesBlock;

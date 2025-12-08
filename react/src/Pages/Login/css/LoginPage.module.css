@@ -7,26 +7,28 @@ body {
     background: linear-gradient(90deg,rgba(5, 22, 255, 1) 0%, rgba(87, 199, 147, 1) 50%, rgba(83, 96, 237, 1) 100%);;
 }
 
-main {
+.login_page_main {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 30px;
     background-color: rgb(143, 162, 248);
     padding: 5vw;
     border-radius: 20px;
+    height: 100vh;
+    align-items: center;
 }
 
-main h1 {
+.login_page_main h1 {
     font-size: 2vw;
     color:#007BFF;
 }
 
-main a {
+.login_page_main a {
     text-decoration: none;
     color: #3d588e;
     cursor: pointer;
 }
 
-main a:hover {
+.login_page_main a:hover {
     color: #004A99;
 }

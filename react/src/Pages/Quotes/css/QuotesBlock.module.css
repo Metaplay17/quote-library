@@ -1,22 +1,23 @@
 /* QuotesBlock.css */
-.quote-block {
+.quote_block {
   padding: 1.5rem;
   background-color: #f0f8ff;
-  min-height: 80vh;
   width: 100%;
+  min-height: 80vh;
+  overflow: auto;
 }
 
-.search-section {
+.search_section {
   margin-bottom: 1.5rem;
 }
 
-.search-form {
+.search_form {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.search-input {
+.search_input {
   flex: 1;
   padding: 0.75rem;
   border: 1px solid #b3e5fc;
@@ -24,14 +25,14 @@
   font-size: 1rem;
 }
 
-.search-author-input {
+.search_author_input {
   padding: 0.75rem;
   border: 1px solid #b3e5fc;
   border-radius: 4px;
   font-size: 1rem;
 }
 
-.search-button, .random-button {
+.search_button, .random_button {
   padding: 0.75rem 1rem;
   border: none;
   border-radius: 4px;
@@ -40,30 +41,30 @@
   transition: background-color 0.3s;
 }
 
-.search-button {
+.search_button {
   background-color: #0288d1;
   color: white;
 }
 
-.random-button {
+.random_button {
   background-color: #0277bd;
   color: white;
 }
 
-.search-button:hover {
+.search_button:hover {
   background-color: #0277bd;
 }
 
-.random-button:hover {
+.random_button:hover {
   background-color: #01579b;
 }
 
-.content-layout {
+.content_layout {
   display: flex;
   gap: 2rem;
 }
 
-.tags-sidebar {
+.tags_sidebar {
   display: flex;
   flex-direction: column;
   width: 15vw;
@@ -74,12 +75,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.tags-sidebar h3 {
+.tags_sidebar h3 {
   margin-top: 0;
   color: #0288d1;
 }
 
-.authors-sidebar {
+.authors_sidebar {
   display: flex;
   flex-direction: column;
   width: 15vw;
@@ -90,24 +91,24 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.authors-sidebar h3 {
+.authors_sidebar h3 {
   margin-top: 0;
   color: #0288d1;
 }
 
-.search-authors-block {
+.search_authors_block {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.tags-list {
+.tags_list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.tag-checkbox {
+.tag_checkbox {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -115,13 +116,13 @@
   user-select: none;
 }
 
-.authors-search {
+.authors_search {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.author-search-block {
+.author_search_block {
   display: flex;
   flex-direction: row;
   padding: 10px;
@@ -130,31 +131,27 @@
   justify-content: space-between;
 }
 
-.author-search-block p {
+.author_search_block p {
   margin-top: 0;
   color: #0288d1;
 }
 
-.author-search-block button {
+.author_search_block button {
   background-color: #0277bd;
   color: white;
   border: 0;
   padding: 5px;
 }
 
-.author-search-block button:hover {
+.author_search_block button:hover {
   background-color: #0277bd;
 }
 
-.quotes-container {
+.quotes_container {
     width: 100%;
 }
 
-.quotes-grid {
-  max-height: 80vh;
-}
-
-.quote-card {
+.quote_card {
   background-color: white;
   padding: 1.1rem;
   border-radius: 8px;
@@ -162,29 +159,29 @@
   margin-bottom: 1rem;
 }
 
-.quote-text {
+.quote_text {
   font-style: italic;
   margin: 0 0 0.5rem 0;
   line-height: 1.5;
 }
 
-.quote-author {
+.quote_author {
   margin: 0;
   color: #0277bd;
   font-size: 0.9rem;
 }
 
-.quote-context {
+.quote_context {
   margin: 0;
   color: #001d6e;
   font-size: 0.9rem;
 }
 
-.quote-tags {
+.quote_tags {
   margin: 0.75rem 0;
 }
 
-.quote-description {
+.quote_description {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -192,7 +189,7 @@
   margin-top: 5px;
 }
 
-.tag-badge {
+.tag_badge {
   display: inline-block;
   background-color: #b3e5fc;
   color: #01579b;
@@ -202,7 +199,7 @@
   margin-right: 0.25rem;
 }
 
-.favorite-button {
+.favorite_button {
   background-color: transparent;
   border: 1px solid #0288d1;
   color: #0288d1;
@@ -210,10 +207,9 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  max-height: 4vh;
 }
 
-.favorite-button:hover {
+.favorite_button:hover {
   background-color: #e1f5fe;
 }
 
@@ -225,7 +221,7 @@
   margin-top: 1.5rem;
 }
 
-.pagination-button {
+.pagination_button {
   padding: 0.5rem 1rem;
   border: 1px solid #0288d1;
   background-color: white;
@@ -235,15 +231,15 @@
   transition: background-color 0.3s;
 }
 
-.pagination-button:disabled {
+.pagination_button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.pagination-button:hover:not(:disabled) {
+.pagination_button:hover:not(:disabled) {
   background-color: #e1f5fe;
 }
 
-.pagination-info {
+.pagination_info {
   color: #0277bd;
 }

@@ -1,36 +1,35 @@
 /* AdminPanel.css */
-.admin-panel {
+.admin_panel {
   padding: 1.5rem;
   background-color: #f0f8ff;
-  height: 75vh;
 }
 
-.admin-layout {
+.admin_layout {
   display: flex;
   gap: 2rem;
 }
 
-.admin-sidebar {
+.admin_sidebar {
   width: 280px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-.admin-form-card {
+.admin_form_card {
   background-color: white;
   padding: 1.25rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.admin-form-card h3 {
+.admin_form_card h3 {
   margin-top: 0;
   color: #0288d1;
   font-size: 1.1rem;
 }
 
-.admin-form-card input {
+.admin_form_card input {
   width: 100%;
   padding: 0.6rem;
   margin-bottom: 0.75rem;
@@ -39,7 +38,7 @@
   font-size: 1rem;
 }
 
-.submit-button {
+.submit_button {
   width: 100%;
   padding: 0.6rem;
   background-color: #0288d1;
@@ -51,40 +50,42 @@
   transition: background-color 0.3s;
 }
 
-.submit-button:hover {
+.submit_button:hover {
   background-color: #0277bd;
 }
 
-.quote-editor {
+.quote_editor {
   flex: 1;
   background-color: white;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
-.quote-editor h2 {
+.quote_editor h2 {
   margin-top: 0;
   color: #0288d1;
   padding: 10px;
   font-size: 1.5vw;
 }
 
-.quote-form {
+.quote_form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  width: 40vw;
 }
 
-.form-row label {
+.form_row label {
   display: block;
   margin-bottom: 0.5rem;
   color: #0277bd;
   font-weight: 500;
 }
 
-.form-row input,
-.form-row textarea {
+.form_row input,
+.form_row textarea {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #b3e5fc;
@@ -93,17 +94,17 @@
   resize: vertical;
 }
 
-.tags-input-group {
+.tags_input_group {
   display: flex;
   gap: 0.5rem;
 }
 
-.tags-input-group input {
+.tags_input_group input {
   flex: 1;
   margin-bottom: 0;
 }
 
-.add-tag-button {
+.add_tag_button {
   padding: 0.75rem 1rem;
   background-color: #0288d1;
   color: white;
@@ -113,18 +114,18 @@
   transition: background-color 0.3s;
 }
 
-.add-tag-button:hover {
+.add_tag_button:hover {
   background-color: #0277bd;
 }
 
-.tags-preview {
+.tags_preview {
   margin-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.tag-badge {
+.tag_badge {
   display: inline-block;
   background-color: #b3e5fc;
   color: #01579b;
@@ -133,11 +134,11 @@
   font-size: 0.85rem;
 }
 
-.delete-tag-button:hover {
+.delete_tag_button:hover {
   cursor: pointer
 }
 
-.submit-quote-button {
+.submit_quote_button {
   align-self: flex-start;
   padding: 0.75rem 1.5rem;
   background-color: #0288d1;
@@ -149,6 +150,6 @@
   transition: background-color 0.3s;
 }
 
-.submit-quote-button:hover {
+.submit_quote_button:hover {
   background-color: #0277bd;
 }

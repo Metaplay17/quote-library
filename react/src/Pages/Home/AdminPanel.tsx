@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './css/AdminPanel.css';
+import styles from './css/AdminPanel.module.css';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
 import { useNavigate } from 'react-router-dom';
 import { makeSafeGet, makeSafePost } from '../../util';
@@ -92,6 +92,13 @@ const AdminPanel: React.FC = () => {
       });
       return;
     }
+    if (tags.length == 0) {
+      showAlert({
+          title: "Ошибка",
+          message: "У цитаты должен быть минимум один тег"
+      });
+      return;
+    }
     const response : Response | null = await makeSafePost("/quotes", {
       text: quoteText,
       authorId: filteredAuthors.length == 1 ? filteredAuthors[0].id : null,
@@ -112,12 +119,12 @@ const AdminPanel: React.FC = () => {
   };
 
   return (
-    <div className="admin-panel">
-      <div className="admin-layout">
+    <div className={styles.admin_panel}>
+      <div className={styles.admin_layout}>
         {/* Левый блок */}
-        <aside className="admin-sidebar">
+        <aside className={styles.admin_sidebar}>
           {/* Форма: добавить автора */}
-          <div className="admin-form-card">
+          <div className={styles.admin_form_card}>
             <h3>Добавить автора</h3>
             <form onSubmit={handleAddAuthor}>
               <input
@@ -127,12 +134,12 @@ const AdminPanel: React.FC = () => {
                 onChange={(e) => setAuthorName(e.target.value)}
                 required
               />
-              <button type="submit" className="submit-button">Отправить</button>
+              <button type="submit" className={styles.submit_button}>Отправить</button>
             </form>
           </div>
 
           {/* Форма: добавить тег */}
-          <div className="admin-form-card">
+          <div className={styles.admin_form_card}>
             <h3>Добавить тег</h3>
             <form onSubmit={handleAddTagGlobal}>
               <input
@@ -142,59 +149,60 @@ const AdminPanel: React.FC = () => {
                 onChange={(e) => setTagName(e.target.value)}
                 required
               />
-              <button type="submit" className="submit-button">Отправить</button>
+              <button type="submit" className={styles.submit_button}>Отправить</button>
             </form>
           </div>
         </aside>
 
         {/* Правый блок */}
-        <main className="quote-editor">
+        <main className={styles.quote_editor}>
           <h2>Добавить новую цитату</h2>
-          <form onSubmit={handleSubmitQuote} className="quote-form">
-            <div className="form-row">
+          <form onSubmit={handleSubmitQuote} className={styles.quote_form}>
+            <div className={styles.form_row}>
               <label>Текст цитаты</label>
               <textarea
                 value={quoteText}
                 onChange={(e) => setQuoteText(e.target.value)}
                 placeholder="Введите текст цитаты..."
-                rows={4}
+                rows={1}
                 required
               />
             </div>
 
-            <div className="form-row">
+            <div className={styles.form_row}>
               <label>Контекст (опционально)</label>
               <textarea
                 value={quoteContext}
                 onChange={(e) => setQuoteContext(e.target.value)}
                 placeholder="Где и когда была сказана цитата..."
-                rows={2}
+                rows={1}
               />
             </div>
 
-            <div className="form-row">
+            <div className={styles.form_row}>
               <label>Автор</label>
               <input
                 type="text"
                 value={quoteAuthor}
-                onChange={(e) => {setQuoteAuthor(e.target.value); setSearchAuthorTerm(e.target.value)}}
+                onChange={(e) => {
+                  setQuoteAuthor(e.target.value);
+                  setSearchAuthorTerm(e.target.value);
+                }}
                 placeholder="Имя автора"
                 list="authors-datalist"
                 required
               />
               <datalist id="authors-datalist">
                 {filteredAuthors.map(a => (
-                  <option>
-                    {a.name}
-                  </option>
+                  <option key={a.id}>{a.name}</option>
                 ))}
               </datalist>
             </div>
 
             {/* Мини-форма для тегов к цитате */}
-            <div className="form-row">
+            <div className={styles.form_row}>
               <label>Теги</label>
-              <div className="tags-input-group">
+              <div className={styles.tags_input_group}>
                 <input
                   type="text"
                   value={newTag}
@@ -204,21 +212,21 @@ const AdminPanel: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleAddTagToQuote}
-                  className="add-tag-button"
+                  className={styles.add_tag_button}
                 >
                   Добавить
                 </button>
               </div>
-              <div className="tags-preview">
+              <div className={styles.tags_preview}>
                 {tags.map((tag, index) => (
-                  <span key={index} className="tag-badge">
-                    {tag} <span onClick={() => handleRemoveTag(tag)} className="delete-tag-button">❌</span>
+                  <span key={index} className={styles.tag_badge}>
+                    {tag} <span onClick={() => handleRemoveTag(tag)} className={styles.delete_tag_button}>❌</span>
                   </span>
                 ))}
               </div>
             </div>
 
-            <button type="submit" className="submit-quote-button">
+            <button type="submit" className={styles.submit_quote_button}>
               Добавить цитату
             </button>
           </form>

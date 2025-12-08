@@ -1,5 +1,5 @@
-/* RegistrationForm.css */
-.registration-container {
+/* LoginForm.css */
+.login_container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,9 +7,10 @@
   padding: 1vw;
   margin: 1vw;
   border-radius: 15px;
+  max-width: 450px;
 }
 
-.registration-form {
+.login_form {
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
@@ -18,24 +19,24 @@
   max-width: 400px;
 }
 
-.registration-form h2 {
+.login_form h2 {
   text-align: center;
   color: #0288d1;
   margin-bottom: 1.5rem;
 }
 
-.input-group {
+.input_group {
   margin-bottom: 1rem;
 }
 
-.input-group label {
+.input_group label {
   display: block;
   margin-bottom: 0.5rem;
   color: #0277bd;
   font-weight: 500;
 }
 
-.input-group input {
+.input_group input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #b3e5fc;
@@ -44,13 +45,13 @@
   transition: border-color 0.3s;
 }
 
-.input-group input:focus {
+.input_group input:focus {
   outline: none;
   border-color: #0288d1;
   box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.2);
 }
 
-.register-button {
+.login_button {
   width: 100%;
   padding: 0.75rem;
   background-color: #0288d1;
@@ -62,6 +63,6 @@
   transition: background-color 0.3s;
 }
 
-.register-button:hover {
+.login_button:hover {
   background-color: #0277bd;
 }

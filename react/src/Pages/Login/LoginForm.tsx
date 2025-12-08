@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './css/LoginForm.css';
+import styles from './css/LoginForm.module.css';
 import { isValidPassword, isValidUsername } from '../../util';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
@@ -60,10 +60,10 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
+    <div className={styles.login_container}>
+      <form onSubmit={handleSubmit} className={styles.login_form}>
         <h2>Вход</h2>
-        <div className="input-group">
+        <div className={styles.input_group}>
           <label htmlFor="username">Имя пользователя</label>
           <input
             type="text"
@@ -73,7 +73,7 @@ const LoginForm: React.FC = () => {
             required
           />
         </div>
-        <div className="input-group">
+        <div className={styles.input_group}>
           <label htmlFor="password">Пароль</label>
           <input
             type="password"
@@ -83,7 +83,7 @@ const LoginForm: React.FC = () => {
             required
           />
         </div>
-        <button type="submit" className="login-button">
+        <button type="submit" className={styles.login_button}>
           Войти
         </button>
       </form>

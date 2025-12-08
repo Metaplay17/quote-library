@@ -1,10 +1,10 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    min-height: 100vh;
 }
 
-main {
+.main_home {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -14,7 +14,7 @@ main {
     padding: 0;
 }
 
-main h2 {
+.main_home h2 {
     color: blue;
     font-size: 2vw;
 }

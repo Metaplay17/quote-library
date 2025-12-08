@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import './css/HomeBlock.css';
+import styles from './css/HomeBlock.module.css';
 import { makeSafeGet } from '../../util';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationDialog } from '../../Modals/NotificationContext';
@@ -34,7 +34,7 @@ const HomeBlock = () => {
     }
     else {
         return (
-            <main>
+            <main className={styles.main_home}>
                 <AdminPanel />
             </main>
 
