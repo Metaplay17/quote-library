@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class LoginRequest {
-    @NotNull
-    @NotBlank
-    @Size(min = 3)
+    @NotNull(message = "Имя пользователя должно быть указано")
+    @NotBlank(message = "Имя пользователя не может быть пустым")
+    @Size(min = 3, max = 25, message = "Длина имени пользователя - от 3 до 25 символов")
     private String username;
 
-    @NotNull
-    @NotBlank
-    @Size(min = 8)
+    @NotNull(message = "Пароль должен быть указан")
+    @NotBlank(message = "Пароль не может быть пустым")
+    @Size(min = 8, message = "длина пароля - от 8 символов")
     private String password;
 }

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank
-    @NotNull
-    @Size(min = 3)
+    @NotBlank(message = "Имя пользователя не может быть пустым")
+    @NotNull(message = "Имя пользователя должно быть указано")
+    @Size(min = 3, max = 25, message = "Имя пользователя должно быть от 3 до 25 символов в длину")
     private String username;
 
-    @NotBlank
-    @NotNull
-    @Size(min = 8)
+    @NotBlank(message = "Пароль не может быть пустым")
+    @NotNull(message = "Пароль должен быть указан")
+    @Size(min = 8, message = "Длина пароля от 8 символов")
     private String password;
 }

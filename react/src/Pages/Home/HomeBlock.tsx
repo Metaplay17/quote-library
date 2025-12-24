@@ -26,7 +26,8 @@ const HomeBlock = () => {
 
     if (Number(localStorage.getItem('privilegeLevel')) < 5) {
         return (
-            <main>
+            <main className={styles.main_home_user}>
+                <h1>Текущий пользователь:</h1>
                 <h2>{localStorage.getItem("username")}</h2>
             </main>
 
